@@ -50,10 +50,10 @@ div {
 }
 #toc {
  width:25%;
- height:600px;
+    vertical-align: top;
 }
 #reader {
- width:70%;
+ width:60%;
  height:auto;
 }
 </style>

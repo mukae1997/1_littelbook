@@ -7,7 +7,9 @@
      <
     </div>
    <div id='paras'>
-    <div class="paragraph" v-for="para in currentChapter"> {{para}} </div>
+    <div class="paragraph" v-for="para in currentChapter"
+    v-if="para != null && para.replace(' ','').length != 0" >
+      {{para}}  </div>
    </div>
     <div class='flip-page' id="next" v-on:click="pageChange">
      >
@@ -23,7 +25,8 @@ export default {
   bus.$on('chapterChanged', (data)=> {
    this.currentChapter = data.content;
    this.chapterHeader = data.chapterName;
-  console.log('response: ', data);})
+  // console.log('response: ', data);
+ })
  },
  props:{
  },
@@ -44,9 +47,13 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
+.reader {
+ vertical-align: top;
+}
 .paragraph {
  background: #ddd;
  padding:20px;
+ text-align: left;
 }
 #paras {
  padding:10px;
@@ -56,6 +63,7 @@ export default {
  display:inline-block;
 }
 .flip-page {
+ vertical-align: top;
  font-size: 30px;
  font-weight: bold;
  color:#bbb;

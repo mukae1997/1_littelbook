@@ -46,7 +46,9 @@ kh =  {
     'link':"/",
     "content": {
         'actIV': {
-            'scene1':scene1,
+            'scene1':{
+                'deepscene':scene1
+            },
             'scene2':scene2
         }
     }
