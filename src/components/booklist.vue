@@ -5,11 +5,20 @@
     <div id="mainlist" class ='container'>
      <h5>I am mainlist </h5>
      <ul>
-      <li v-for = "b in bookList">
+      <li v-for = "b in bookList"
+        >
        <div>{{b.name}} </div>
-       <div>
-         <label @dbclick="editRemark(b)">{{b.remark}}</label>
+       <div >
+        remark:
+         <label v-if="b != editedBook || !editing"
+         @click="editRemark(b)">{{b.remark}}</label>
        </div>
+       <input  type="text"
+       v-model="editingRemark"
+       v-if="editedBook == b && editing"
+       v-on-edit="editedBook == b"
+       @keyup.enter="doneEdit(b)"
+       @keyup.esc="cancelEdit(b)" />
       </li>
      </ul>
     </div>
@@ -29,17 +38,57 @@ export default {
     return {
      bookList: [{
       name:'Tender is the night',
-      remark:""
+      remark:"romantic"
      },
       {
        name:'Story Of Your Life',
-       remark:""
-      }]
+       remark:"cool"
+      }],
+      editedRemarkCache:"", // for canceling while preserve content
+      editedBook:null,
+      editing: false,
+      editingRemark:""
     }
   },
   methods: {
-   'editRemark': function() {
-
+   'editRemark': function(b) {
+    // console.log(b);
+     console.log('editRemark');
+    var deepCopyOf = function self(s) {
+     return (' '+s).slice(1);
+    };
+   this.editingRemark = deepCopyOf(b.remark);
+    // console.log(this.editingRemark);
+    this.editedRemarkCache = b.remark;
+    this.editedBook = b;
+    this.editing = true;
+    console.log(this.bookList[0]);
+   },
+   'doneEdit': function(b) {
+    console.log('blur');
+    b.remark = this.editingRemark;
+    this.editing = false;
+   },
+   'cancelEdit': function(b) {
+   console.log(this.bookList[0]);
+    console.log('cancelEdit');
+    // b.remark = this.editedRemarkCache; // useless
+    this.editedRemarkCache = "";
+    this.editing = false;
+   }
+  },
+  watch: {
+   bookList: function(newBookList) {
+    console.log(newBookList);
+   }
+  },
+  directives: {
+   'on-edit': {
+    bind(el,binding,vnode) {
+     if (binding.value) {
+      el.focus();
+     }
+    }
    }
   }
 }
@@ -54,7 +103,7 @@ div {
  padding:20px;
 }
 li div {
- padding-left: 10px;
+ padding: 15px;
  display: inline-block;
 }
 .container {

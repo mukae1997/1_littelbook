@@ -19,20 +19,26 @@
 import {bus} from '../main'
 // import {readBooks} from '../read_dir'
 // Essays_and_Lectures
-import workData from '../.././literature/Essays_and_Lectures.json'
 import subToc from './subtoc.vue'
+import EAL from '../.././literature/Essays_and_Lectures.json'
 export default {
  components: {
   'sub-toc': subToc
  },
+ props:{
+  workdata:{
+   type:Object
+  }
+ },
 data () {
   return {
-   work: workData,
+   work: EAL,
    currentChapterName: '',
    deepLevel: false
   }
 },
   created() {
+   
    var getArrayWhereTheNameIn  = function self(name, thing) {
     // console.log(thing);
      for (var key in thing) {

@@ -26,7 +26,7 @@ export default {
   // request to server
  },
  mounted() {
-  console.log(workData);
+  // console.log(workData);
  },
   data () {
     return {
