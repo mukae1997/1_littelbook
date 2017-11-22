@@ -23,6 +23,7 @@ import {bus} from '../main'
 export default {
  created() {
   bus.$on('chapterChanged', (data)=> {
+   console.log('chapter change to: ', data.chapterName);
    this.currentChapter = data.content;
    this.chapterHeader = data.chapterName;
   // console.log('response: ', data);
@@ -39,7 +40,11 @@ export default {
   methods: {
    'pageChange': function(e) {
     var id = e.target.id;
-    bus.$emit('pageChanged', id.replace(' ',''));
+    bus.$emit('pageChanged',
+    {
+     id:id.replace(' ',''),
+     chapterName: this.chapterHeader
+   });
    }
   }
 }

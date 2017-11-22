@@ -1,16 +1,19 @@
 <template>
   <div id="app">
-  <Book />
+   <h1> little book</h1>
+   <router-view />
   </div>
 </template>
 
 <script>
 import HelloWorld from './components/HelloWorld'
 import Book from './components/Book'
+import BookList from './components/booklist.vue'
 export default {
   name: 'app',
   components: {
-    Book
+    Book,
+    BookList
   }
 }
 </script>

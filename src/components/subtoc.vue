@@ -31,37 +31,46 @@ export default {
    this.toc = this.subtoc;
    this.chapterName = this.chapName;
    // console.log(Array.isArray(Object.values(this.toc)[0]));
-   bus.$on('shoutForSibling', (name)=>{
-    if (name == this.chapterName) {
+   bus.$on('shoutForSibling', (obj)=>{
+    // console.log('[',obj.name,'][', this.chapterName,']');
+    if (obj.name == this.chapterName) {
      // answer the call
-    }
+     var showPointer = obj.pointer==1?0:Object.keys(this.toc).length-1;
+     console.log(obj.name, ' answer the call. pointer: ', obj.pointer);
+     console.log('jump to: ',showPointer);
+    bus.$emit('chapterChanged', {
+     chapterName: Object.keys(this.toc)[showPointer],
+     content: Object.values(this.toc)[showPointer]
+    });
+   }
    });
    if (Array.isArray(Object.values(this.toc)[0])) {
     this.tocReadable = true;
     // console.log(this.toc);
-    bus.$on('pageChanged', (id)=> {
-
-    console.log('pageChanged: ', '[',id,']');
+    bus.$on('pageChanged', (obj)=> {
+     var id = obj.id;
+     var name = obj.chapterName;
+    console.log('subtoc receive: pageChanged: ', name);
     var pointer = (id == 'prev')?-1:1;
     var cts = this.toc;
 
-    var findID = Object.keys(cts).indexOf(this.chapterName);
+    var findID = Object.keys(cts).indexOf(name);
      if (findID != -1) {
           var targetIndex =  findID + pointer;
           if (!((findID == 0 && pointer == -1)
           || (findID == Object.keys(cts).length-1 && pointer == 1))) {
 
            var chp = Object.keys(cts)[targetIndex];
-            this.chapterName = chp;
+
            bus.$emit('chapterChanged', {
             chapterName: chp,
             content: cts[chp]
            });
           } else {
            // need to change chapter
-           // console.log('findID = ',findID);
+            // console.log('findID = ',findID);
            bus.$emit('callSibling', {
-            name: this.chapterName,
+            name: name,
             pointer: pointer
            });
           }
@@ -83,7 +92,7 @@ export default {
     if　(this.tocReadable) {
 
       var chp =　e.target.textContent.match(/[^\n\s].*[^\n\s]/g)[0];
-      this.chapterName = chp;
+      // this.chapterName = chp;
 
       var mes = {};
        var cts = this.toc[chp];

@@ -1,6 +1,6 @@
 <template>
-  <div class="hello">
-   <h1> book </h1>
+  <div id="book">
+   <h2> book </h2>
    <div id='mainpage'>
        <div id = "reader" class="inlinecontainer">
        <reader />
@@ -21,6 +21,9 @@ export default {
    'toc':toc,
    'reader':reader,
    chapterChoose: ''
+ },
+ created() {
+  // request to server
  },
  mounted() {
   console.log(workData);

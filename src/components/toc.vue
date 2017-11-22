@@ -17,6 +17,7 @@
 
 <script>
 import {bus} from '../main'
+// import {readBooks} from '../read_dir'
 // Essays_and_Lectures
 import workData from '../.././literature/Essays_and_Lectures.json'
 import subToc from './subtoc.vue'
@@ -34,35 +35,41 @@ data () {
   created() {
    var getArrayWhereTheNameIn  = function self(name, thing) {
     // console.log(thing);
-     console.log( thing);
-     for( var key in thing) {
-     var names = Object.keys(thing[key]);
-
-    for (var i = 0; i < names.length; i++) {
-     var k = names[i];
-     // console.log(k == name,'[',k,']', '[',name,']');
-     if (k==name) {
-      return thing;
+     for (var key in thing) {
+      if (Array.isArray(Object.values(thing[key])[0])) {
+       if (Object.keys(thing[key]).indexOf(name) != -1) {
+        return {
+         arr: Object.keys(thing),
+         parent: key
+         };
+       }
+      } else {
+       return self(name, thing[k]);
+      }
      }
-     if (!Array.isArray(thing[key][k])) {
-      var res = self(name, thing[key][k]);
-      if (res != []) return res;
-     }
-     if (Object.keys(thing[key][k]).indexOf(name) != -1) {
-      return thing;
-     }
-    }
-     }
-    return [];
+     return [];
    };
 
    bus.$on('callSibling', (obj)=>{
-    console.log('high level receive a call.');
+    console.log('toc level receive a call.');
     var name = obj.name;
+    this.currentChapterName = obj.name;
     var pointer = obj.pointer;
-    console.log(name);
-    var arr = getArrayWhereTheNameIn(name, this.work.content);
-    console.log(arr);
+    // console.log(name);
+    var res = getArrayWhereTheNameIn(name, this.work.content);
+    var arr = res.arr;
+    // console.log(arr);
+    var parentPointer = (res.arr.indexOf(res.parent));
+    if (!((parentPointer == 0 && pointer == -1)
+    || (parentPointer == res.arr.length-1 && pointer == 1))) {
+     var sibliPointer = parentPointer + pointer;
+     var sibliName = arr[sibliPointer];
+      console.log('toc shout for:', sibliName);
+     bus.$emit('shoutForSibling',  {
+      name:sibliName,
+      pointer: obj.pointer
+     });
+    }
 
    });
   },
@@ -76,6 +83,9 @@ data () {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
+h3 {
+ text-align: center;
+}
 #info div {
  padding:5px;
 }
