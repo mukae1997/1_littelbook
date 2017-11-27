@@ -4,8 +4,8 @@
    <div id="maincontainer">
     <div id="mainlist" class ='container'>
      <h5>I am mainlist </h5>
-     <ul>
-      <li v-for = "b in bookList"
+     <transition-group tag="ul" name="slide">
+      <li v-for = "b in bookList" :key="b.name"
         >
        <div>{{b.name}} </div>
        <div >
@@ -20,7 +20,7 @@
        @keyup.enter="doneEdit(b)"
        @keyup.esc="cancelEdit(b)" />
       </li>
-     </ul>
+     </transition-group>
     </div>
 
    <div id="searchbox-container" class ='container'>
